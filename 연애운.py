@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime, date
 import random
 
-# 정확한 별자리 계산 함수
+# 별자리 계산 함수
 def get_zodiac_sign(month, day):
     if (month == 1 and day >= 20) or (month == 2 and day <= 18):
         return "물병자리", "🏺"
@@ -47,7 +47,7 @@ zodiac_traits = {
     "염소자리": "책임감 있고 진중한 스타일. 신뢰를 기반으로 한 사랑을 중요시해요.",
 }
 
-# 궁합 설명
+# 찰떡궁합
 zodiac_compatibility = {
     "물병자리": ("쌍둥이자리", "자유로운 두 사람, 서로의 생각을 자극해요!"),
     "물고기자리": ("게자리", "서로의 감성을 따뜻하게 보듬어주는 궁합이에요."),
@@ -77,16 +77,29 @@ advice_list = [
     "오늘의 노력은 내일의 설렘으로 돌아올 거예요 ✨",
 ]
 
-# --- Streamlit App ---
+# 고백 팁
+confession_tips = [
+    "진심을 담은 짧은 문자로 마음을 전해보세요. 너무 길 필요 없어요 💌",
+    "따뜻한 커피 한 잔 건네며 자연스럽게 고백해보세요 ☕",
+    "산책하며 조용한 순간에 조심스럽게 이야기해보세요 🌙",
+    "‘사실 너 좋아해’ 라고 담백하게 말해보세요 🎯",
+    "대화 중 진지한 눈빛으로 분위기 전환해보세요 🎭",
+    "‘요즘 네 생각 자주 나더라’로 슬쩍 시작해보세요 💬",
+    "서툴러도 괜찮아요. 진심이면 충분해요 🫶",
+    "‘용기내서 말해보려 해… 좋아해’ ✨",
+    "손글씨 메시지 카드에 고백을 담아보세요 ✍️",
+    "눈 마주치고 짧게, '나 너 좋아해.' ❤️",
+]
+
+# Streamlit 시작
 st.set_page_config(page_title="생일로 보는 러브 운명", page_icon="💘", layout="centered")
 
 st.markdown("""
     <h1 style="text-align:center; color:#e91e63;">🎀 생일로 보는 러브 운명 💘</h1>
-    <p style="text-align:center; font-size:18px;">당신의 생일 속에 숨어 있는 오늘의 연애 기운을 확인해보세요!</p>
+    <p style="text-align:center; font-size:18px;">당신의 생일 속에 숨어 있는 오늘의 연애 기운과 고백 운명을 확인해보세요!</p>
 """, unsafe_allow_html=True)
 
 name = st.text_input("💁‍♀️ 당신의 이름을 입력해주세요", "")
-
 birth_date = st.date_input(
     "🎂 생년월일을 선택해주세요",
     value=date(2000, 1, 1),
@@ -101,33 +114,35 @@ if st.button("✨ 러브 운명 확인하기 ✨"):
             day = birth_date.day
             year = birth_date.year
 
-            # 별자리
             sign, emoji = get_zodiac_sign(month, day)
             trait = zodiac_traits.get(sign, "사랑스러운 성격이에요 💗")
             compat_sign, compat_desc = zodiac_compatibility.get(sign, ("", ""))
-
-            # 점수
             seed_str = f"{month:02}{day:02}{year}"
             random.seed(int(seed_str))
             love_score = random.randint(65, 99)
             advice = random.choice(advice_list)
+            confession = random.choice(confession_tips)
 
-            # 결과 출력
             st.markdown("---")
             st.markdown(f"""
-            <div style='text-align:center;'>
-                <h2>{emoji} <strong>{sign}</strong>의 {name}님 💖</h2>
-                <p style="font-size:18px;">✨ {trait}</p>
-                <h1 style="color:#ff4081; margin-top:24px;">💘 오늘의 연애운 점수: <strong>{love_score}점</strong></h1>
-                <p style="font-size:20px; margin-top:16px;">🔮 조언: {advice}</p>
-                <p style="font-size:18px; margin-top:24px;">💕 찰떡궁합 별자리: <strong>{compat_sign}</strong></p>
-                <p style="font-size:16px; color:#666;">{compat_desc}</p>
-            </div>
+                <div style='text-align:center;'>
+                    <h2>{emoji} <strong>{sign}</strong>의 {name}님 💖</h2>
+                    <p style="font-size:18px;">✨ {trait}</p>
+                    <h1 style="color:#ff4081; margin-top:24px;">💘 오늘의 연애운 점수: <strong>{love_score}점</strong></h1>
+                    <p style="font-size:20px; margin-top:16px;">🔮 조언: {advice}</p>
+                    <p style="font-size:18px; margin-top:24px;">💕 찰떡궁합 별자리: <strong>{compat_sign}</strong></p>
+                    <p style="font-size:16px; color:#666;">{compat_desc}</p>
+                    <div style='margin-top:32px;'>
+                        <h3>💌 고백 TIP</h3>
+                        <p style="font-size:18px;">{confession}</p>
+                    </div>
+                </div>
             """, unsafe_allow_html=True)
         except Exception as e:
             st.error(f"문제가 발생했어요: {e}")
     else:
         st.warning("이름과 생년월일을 모두 입력해주세요 😊")
+
 
 
 
