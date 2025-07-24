@@ -1,71 +1,92 @@
 import streamlit as st
-import random
 
-st.set_page_config(page_title="기분별 음식 추천", page_icon="🍱", layout="wide")
+# 페이지 설정
+st.set_page_config(page_title="기분별 음식 추천", page_icon="🍽️", layout="wide")
 
-# 스타일 추가
+# 스타일 설정
 st.markdown("""
     <style>
-    body {
-        background: linear-gradient(to right, #fff1eb, #ace0f9);
-        font-family: 'Comic Sans MS', cursive, sans-serif;
+    html, body {
+        background: linear-gradient(to right, #ffe8ec, #e0f7fa);
+        font-family: 'Segoe UI', sans-serif;
     }
     .title {
-        font-size: 48px;
-        font-weight: 900;
         text-align: center;
-        color: #ff69b4;
-        text-shadow: 2px 2px #ffc0cb;
+        font-size: 48px;
+        font-weight: bold;
+        color: #ff4081;
+        text-shadow: 2px 2px #ffd1dc;
+        margin-top: 30px;
+        margin-bottom: 10px;
     }
-    .highlight {
+    .subtitle {
+        text-align: center;
+        font-size: 22px;
+        color: #555;
+        margin-bottom: 30px;
+    }
+    .recommend-box {
         background-color: #ffffffcc;
         padding: 2rem;
         border-radius: 20px;
-        box-shadow: 4px 4px 20px rgba(0,0,0,0.1);
+        box-shadow: 2px 4px 20px rgba(0,0,0,0.1);
+        text-align: center;
+        margin-top: 30px;
     }
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="title">🌈 오늘의 기분으로 음식 추천받기 🍙</div>', unsafe_allow_html=True)
-st.write("")
+# 헤더
+st.markdown('<div class="title">🌈 오늘의 기분에 따라 음식 추천받기</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">기분을 골라보세요! 귀여운 음식과 함께하는 감성 추천🍓</div>', unsafe_allow_html=True)
 
-# 신박한 기분 목록
-feelings = {
-    "🧠 뇌가 과열된 날": ("비빔냉면", "https://i.imgur.com/VoW5E7f.png", "매콤하고 시원한 냉면으로 머리를 식혀요!"),
-    "🐢 느리게 살고 싶은 날": ("수플레 팬케이크", "https://i.imgur.com/Gmcz6hx.png", "폭신하고 달콤한 게 천천히 즐기기 딱 좋아요~"),
-    "🛸 현실도피 하고 싶은 날": ("타코야끼", "https://i.imgur.com/BlOqES0.png", "지구를 잠시 떠나 일본 야시장 느낌~"),
-    "🎢 기분이 널뛰는 날": ("떡볶이", "https://i.imgur.com/1d13cGx.png", "단짠단짠 매운맛으로 감정을 같이 널뛰자!"),
-    "🧚 공상에 빠진 날": ("마카롱", "https://i.imgur.com/b4kL0re.png", "알록달록 상상의 나라로~"),
-    "🤹 아무 것도 하기 싫은 날": ("컵라면", "https://i.imgur.com/SKP7Hym.png", "그냥 물만 부으면 끝. 최고.")
+# 기분 및 음식 데이터
+feeling_data = {
+    "🧠 뇌가 과열된 날": {
+        "food": "비빔냉면",
+        "desc": "매콤하고 시원한 냉면으로 머릿속 열을 식혀보아요!",
+        "img": "1684ba00-8529-4d03-88d7-4b5a0889132e.png"
+    },
+    "🐢 느리게 살고 싶은 날": {
+        "food": "수플레 팬케이크",
+        "desc": "폭신폭신 천천히 즐기는 힐링 디저트!",
+        "img": "289484d6-0b8b-4080-a882-6465ec3c6cf2.png"
+    },
+    "🛸 현실도피 하고 싶은 날": {
+        "food": "타코야끼",
+        "desc": "지구를 떠나 일본 야시장에 온 듯한 기분~",
+        "img": "654d9f2b-24a7-4ce9-8c4c-14437a2edff7.png"
+    },
+    "🎢 감정이 널뛰는 날": {
+        "food": "떡볶이",
+        "desc": "단짠맵 감정도 같이 롤러코스터 타자!",
+        "img": "b5e13f19-90a4-4626-84d7-8dc7fd836eb4.png"
+    },
+    "🧚 공상에 빠진 날": {
+        "food": "마카롱",
+        "desc": "달콤하고 동화 같은 색감의 판타지 간식",
+        "img": "5e626b7a-5b22-4c0f-869b-3b08ee5a25f0.png"
+    },
+    "🤹 아무 것도 하기 싫은 날": {
+        "food": "라면",
+        "desc": "물만 부으면 완성! 간편하고 따뜻한 위로",
+        "img": "fb2e7779-c9b6-45c6-be01-0b2f8467fd14.png"
+    }
 }
 
-selected_feeling = st.selectbox("지금 당신의 기분은...?", list(feelings.keys()))
+# 기분 선택 UI
+feeling = st.selectbox("지금 당신의 기분은?", list(feeling_data.keys()))
 
-if selected_feeling:
-    food, img_url, comment = feelings[selected_feeling]
-
+# 추천 결과 출력
+if feeling:
+    data = feeling_data[feeling]
     st.markdown(f"""
-    <div class="highlight">
-        <h2>🍽 추천 음식: {food}</h2>
-        <img src="{img_url}" width="300">
-        <p style='font-size:20px;'>💬 {comment}</p>
+    <div class="recommend-box">
+        <h2 style='color:#ff4081;'>🍽 오늘의 추천: {data['food']}</h2>
+        <img src="https://{st.runtime.scriptrunner.script_run_context.get_script_run_ctx().server.host}/_stcore/static/uploads/{data['img']}" width="300">
+        <p style='font-size:18px; margin-top:10px;'>💬 {data['desc']}</p>
     </div>
     """, unsafe_allow_html=True)
 
-# 캐릭터 이미지 (공통)
-st.image("https://i.imgur.com/E6z5CM5.png", caption="🍓 푸딩요정이 함께해요!", width=200)
-import streamlit as st
-
-st.set_page_config(page_title="비빔냉면 추천", page_icon="🍜")
-
-st.markdown("<h1 style='text-align: center; color: #d84315;'>🧠 뇌가 과열된 날엔…</h1>", unsafe_allow_html=True)
-
-st.image("1684ba00-8529-4d03-88d7-4b5a0889132e.png", caption="시원~한 비빔냉면", use_column_width=True)
-
-st.markdown("""
-<div style='text-align:center; font-size:20px; padding-top: 1rem;'>
-💬 매콤하고 시원한 냉면으로 머릿속 열을 식혀보아요!
-</div>
-""", unsafe_allow_html=True)
 
 
