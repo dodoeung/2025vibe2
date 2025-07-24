@@ -1,9 +1,11 @@
 import streamlit as st
+from PIL import Image
+import os
 
 # 페이지 설정
-st.set_page_config(page_title="기분별 음식 추천", page_icon="🍽️", layout="wide")
+st.set_page_config(page_title="기분별 음식 추천", page_icon="🍱", layout="wide")
 
-# 스타일 설정
+# 스타일
 st.markdown("""
     <style>
     html, body {
@@ -36,11 +38,11 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 헤더
+# 헤더 출력
 st.markdown('<div class="title">🌈 오늘의 기분에 따라 음식 추천받기</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">기분을 골라보세요! 귀여운 음식과 함께하는 감성 추천🍓</div>', unsafe_allow_html=True)
 
-# 기분 및 음식 데이터
+# 기분-음식 데이터
 feeling_data = {
     "🧠 뇌가 과열된 날": {
         "food": "비빔냉면",
@@ -77,16 +79,24 @@ feeling_data = {
 # 기분 선택 UI
 feeling = st.selectbox("지금 당신의 기분은?", list(feeling_data.keys()))
 
-# 추천 결과 출력
+# 결과 출력
 if feeling:
     data = feeling_data[feeling]
+    
+    # 박스 스타일 설명
     st.markdown(f"""
-    <div class="recommend-box">
-        <h2 style='color:#ff4081;'>🍽 오늘의 추천: {data['food']}</h2>
-        <img src="https://{st.runtime.scriptrunner.script_run_context.get_script_run_ctx().server.host}/_stcore/static/uploads/{data['img']}" width="300">
-        <p style='font-size:18px; margin-top:10px;'>💬 {data['desc']}</p>
-    </div>
+        <div class="recommend-box">
+            <h2 style='color:#ff4081;'>🍽 오늘의 추천: {data['food']}</h2>
+            <p style='font-size:18px;'>💬 {data['desc']}</p>
+        </div>
     """, unsafe_allow_html=True)
+
+    # 이미지 출력
+    image_path = os.path.join(".", data["img"])
+    if os.path.exists(image_path):
+        st.image(Image.open(image_path), use_column_width=False, width=300)
+    else:
+        st.warning(f"⚠️ 이미지 파일이 존재하지 않아요: {data['img']}")
 
 
 
