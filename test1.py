@@ -54,4 +54,18 @@ if selected_feeling:
 
 # 캐릭터 이미지 (공통)
 st.image("https://i.imgur.com/E6z5CM5.png", caption="🍓 푸딩요정이 함께해요!", width=200)
+import streamlit as st
+
+st.set_page_config(page_title="비빔냉면 추천", page_icon="🍜")
+
+st.markdown("<h1 style='text-align: center; color: #d84315;'>🧠 뇌가 과열된 날엔…</h1>", unsafe_allow_html=True)
+
+st.image("1684ba00-8529-4d03-88d7-4b5a0889132e.png", caption="시원~한 비빔냉면", use_column_width=True)
+
+st.markdown("""
+<div style='text-align:center; font-size:20px; padding-top: 1rem;'>
+💬 매콤하고 시원한 냉면으로 머릿속 열을 식혀보아요!
+</div>
+""", unsafe_allow_html=True)
+
 
