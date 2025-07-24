@@ -1,9 +1,9 @@
 import streamlit as st
 import random
 
-st.set_page_config(page_title="귀여운 가위바위보 게임", page_icon="🧸", layout="centered")
+st.set_page_config(page_title="손놀림 요정들의 배틀랜드", page_icon="🧚‍♀️", layout="centered")
 
-# 점수 초기화
+# 점수 상태 초기화
 if "score" not in st.session_state:
     st.session_state.score = 0
 if "win_count" not in st.session_state:
@@ -15,14 +15,15 @@ if "draw_count" not in st.session_state:
 if "rules_checked" not in st.session_state:
     st.session_state.rules_checked = False
 
-# 스타일
+# 제목 + 스타일
 st.markdown("""
     <style>
     .title {
         text-align: center;
-        font-size: 40px;
+        font-size: 42px;
         color: #ff69b4;
         font-family: "Comic Sans MS", cursive, sans-serif;
+        text-shadow: 1px 1px 2px #f8bbd0;
     }
     .emoji {
         font-size: 60px;
@@ -75,31 +76,41 @@ st.markdown("""
     .rule-box li::before {
         content: "🌟 ";
     }
+    @keyframes pop {
+        0%   { transform: scale(1); }
+        50%  { transform: scale(1.5); }
+        100% { transform: scale(1); }
+    }
+    @keyframes shake {
+        0% { transform: translateX(0px); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+        100% { transform: translateX(0px); }
+    }
     </style>
-    <h1 class="title">🐰 컴퓨터와 귀여운 가위바위보 ✨</h1>
+    <h1 class="title">🧚‍♀️ 손놀림 요정들의 배틀랜드 ✨</h1>
 """, unsafe_allow_html=True)
 
 # 규칙 설명
 if not st.session_state.rules_checked:
-    with st.container():
-        st.markdown("""
-        <div class="rule-box">
-            <h3>🎯 게임 규칙 안내</h3>
-            <ul>
-                <li>✂️🐱 <b>가위로 이기면</b> +2점</li>
-                <li>✊🐻 <b>바위로 이기면</b> +1점</li>
-                <li>✋🦊 <b>보로 이기면</b> +3점</li>
-                <li>❌ <b>지면</b> 무기와 상관없이 -1점</li>
-                <li>🤝 <b>비기면</b> 점수 변동 없음</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        if st.button("✅ 규칙 확인하고 게임 시작!"):
-            st.session_state.rules_checked = True
-    st.stop()  # 버튼 누르기 전에는 아래 실행 안되도록
+    st.markdown("""
+    <div class="rule-box">
+        <h3>🎯 게임 규칙 안내</h3>
+        <ul>
+            <li>✂️🐱 <b>가위로 이기면</b> +2점</li>
+            <li>✊🐻 <b>바위로 이기면</b> +1점</li>
+            <li>✋🦊 <b>보로 이기면</b> +3점</li>
+            <li>❌ <b>지면</b> 무기와 상관없이 -1점</li>
+            <li>🤝 <b>비기면</b> 점수 변동 없음</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("✅ 규칙 확인하고 게임 시작!"):
+        st.session_state.rules_checked = True
+    st.stop()
 
-# 게임 로직
+# 선택지
 choices = {
     "✂️🐱 가위 (고양이 가위)": "scissors",
     "✊🐻 바위 (곰돌이 주먹)": "rock",
@@ -122,6 +133,7 @@ if st.button("대결 시작! 💫"):
     result_class = ""
     score_change = 0
 
+    # 결과 판정
     if user_choice == computer_choice:
         result_text = "😐 비겼어요!"
         st.session_state.draw_count += 1
@@ -151,7 +163,6 @@ if st.button("대결 시작! 💫"):
 
     st.session_state.score += score_change
 
-    # 결과 출력
     st.markdown(f"""
         <div class="emoji">
             당신 👉 {cute_map[user_choice]} &nbsp; VS &nbsp; {cute_map[computer_choice]} 👈 컴퓨터
@@ -162,10 +173,11 @@ if st.button("대결 시작! 💫"):
 # 점수판
 st.markdown(f"""
     <div class="score-box">
-        🧾 점수판<br>
+        🧾 요정 점수판<br>
         🏆 총 점수: {st.session_state.score}점<br>
         ✅ 승리: {st.session_state.win_count}회 &nbsp;&nbsp; ❌ 패배: {st.session_state.lose_count}회 &nbsp;&nbsp; 🤝 비김: {st.session_state.draw_count}회
     </div>
 """, unsafe_allow_html=True)
+
 
 
