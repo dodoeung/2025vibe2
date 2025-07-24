@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime
 import random
 
-# ✅ 정확한 별자리 계산
+# 정확한 별자리 계산 함수
 def get_zodiac_sign(month, day):
     if (month == 1 and day >= 20) or (month == 2 and day <= 18):
         return "물병자리", "🏺"
@@ -47,7 +47,7 @@ zodiac_traits = {
     "염소자리": "책임감 있고 진중한 스타일. 신뢰를 기반으로 한 사랑을 중요시해요.",
 }
 
-# 별자리 궁합 매칭 + 간단한 설명
+# 궁합 별자리 + 설명
 zodiac_compatibility = {
     "물병자리": ("쌍둥이자리", "자유로운 두 사람, 서로의 생각을 자극해요!"),
     "물고기자리": ("게자리", "서로의 감성을 따뜻하게 보듬어주는 궁합이에요."),
@@ -89,36 +89,38 @@ name = st.text_input("당신의 이름을 입력해주세요 💁‍♀️", "")
 birth_date = st.date_input("생년월일을 선택해주세요 📅")
 
 if st.button("✨ 러브 운명 확인하기 ✨"):
-    if name:
-        month = birth_date.month
-        day = birth_date.day
-        year = birth_date.year
+    if name and birth_date:
+        try:
+            month = birth_date.month
+            day = birth_date.day
+            year = birth_date.year
 
-        # 별자리
-        sign, emoji = get_zodiac_sign(month, day)
-        trait = zodiac_traits.get(sign, "")
-        compat_sign, compat_desc = zodiac_compatibility.get(sign, ("", ""))
+            # 별자리 및 설명
+            sign, emoji = get_zodiac_sign(month, day)
+            trait = zodiac_traits.get(sign, "사랑스러운 성격이에요 💗")
+            compat_sign, compat_desc = zodiac_compatibility.get(sign, ("", ""))
 
-        # 점수
-        random.seed(int(f"{month}{day}{year}"))
-        love_score = random.randint(65, 99)
+            # 고정된 시드 기반 점수 생성
+            seed_str = f"{month:02}{day:02}{year}"
+            random.seed(int(seed_str))
+            love_score = random.randint(65, 99)
+            advice = random.choice(advice_list)
 
-        # 조언
-        advice = random.choice(advice_list)
-
-        # 결과 출력
-        st.markdown("---")
-        st.markdown(f"""
-        <div style='text-align:center;'>
-            <h2>{emoji} <strong>{sign}</strong>의 {name}님 💖</h2>
-            <p style="font-size:18px;">✨ {trait}</p>
-            <h1 style="color:#ff4081; margin-top:24px;">💘 오늘의 연애운 점수: <strong>{love_score}점</strong></h1>
-            <p style="font-size:20px; margin-top:16px;">🔮 조언: {advice}</p>
-            <p style="font-size:18px; margin-top:24px;">💕 찰떡궁합 별자리: <strong>{compat_sign}</strong></p>
-            <p style="font-size:16px; color:#666;">{compat_desc}</p>
-        </div>
-        """, unsafe_allow_html=True)
+            # 출력
+            st.markdown("---")
+            st.markdown(f"""
+            <div style='text-align:center;'>
+                <h2>{emoji} <strong>{sign}</strong>의 {name}님 💖</h2>
+                <p style="font-size:18px;">✨ {trait}</p>
+                <h1 style="color:#ff4081; margin-top:24px;">💘 오늘의 연애운 점수: <strong>{love_score}점</strong></h1>
+                <p style="font-size:20px; margin-top:16px;">🔮 조언: {advice}</p>
+                <p style="font-size:18px; margin-top:24px;">💕 찰떡궁합 별자리: <strong>{compat_sign}</strong></p>
+                <p style="font-size:16px; color:#666;">{compat_desc}</p>
+            </div>
+            """, unsafe_allow_html=True)
+        except Exception as e:
+            st.error(f"문제가 발생했어요: {e}")
     else:
-        st.warning("이름을 입력해주세요 😊")
+        st.warning("이름과 생년월일을 모두 입력해주세요 😊")
 
 
