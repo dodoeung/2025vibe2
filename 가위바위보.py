@@ -13,7 +13,7 @@ st.markdown("""
         font-family: "Comic Sans MS", cursive, sans-serif;
     }
     .emoji {
-        font-size: 70px;
+        font-size: 60px;
         text-align: center;
         margin-bottom: 20px;
     }
@@ -29,6 +29,12 @@ st.markdown("""
     .lose {
         color: #e91e63;
         animation: shake 0.3s ease-in-out;
+    }
+    .choice-label {
+        font-size: 18px;
+        text-align: center;
+        margin-top: 10px;
+        color: #555;
     }
     @keyframes pop {
         0%   { transform: scale(1); }
@@ -48,22 +54,23 @@ st.markdown("""
 
 # 선택지
 choices = {
-    "가위 ✂️🐱": "scissors",
-    "바위 🪨🐻": "rock",
-    "보 🌸🦊": "paper"
+    "✂️ 가위": "scissors",
+    "🪨 바위": "rock",
+    "📄 보": "paper"
 }
 
+# 사용자 선택
 user_choice_label = st.radio("👉 하나 골라줘!", list(choices.keys()), index=0)
 
 if st.button("대결 시작! 💫"):
     user_choice = choices[user_choice_label]
     computer_choice = random.choice(list(choices.values()))
 
-    # 이모지 맵핑
-    emoji_map = {
-        "rock": "🪨🐻",
-        "paper": "🌸🦊",
-        "scissors": "✂️🐱"
+    # 명확한 이모지와 텍스트 매핑
+    pretty_map = {
+        "rock": "🪨 바위",
+        "paper": "📄 보",
+        "scissors": "✂️ 가위"
     }
 
     # 결과 판정
@@ -83,7 +90,7 @@ if st.button("대결 시작! 💫"):
     # 결과 출력
     st.markdown(f"""
         <div class="emoji">
-            당신 👉 {emoji_map[user_choice]} &nbsp; VS &nbsp; {emoji_map[computer_choice]} 👈 컴퓨터
+            당신 👉 {pretty_map[user_choice]} &nbsp; VS &nbsp; {pretty_map[computer_choice]} 👈 컴퓨터
         </div>
         <div class="result {result_class}">{result_text}</div>
     """, unsafe_allow_html=True)
